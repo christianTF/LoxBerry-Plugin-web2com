@@ -8,9 +8,11 @@
 # That's all.
 
 use File::HomeDir;
+use File::Basename;
 use Config::Simple;
 use warnings;
 use strict;
+
 no strict "refs"; # we need it for template system
 
 my  $home = File::HomeDir->my_home;
@@ -29,9 +31,7 @@ $lang            = $cfg->param("BASE.LANG");
 $template_title = "Ochsner Web2Com Schnittstelle";
 
 # Create help page
-$helptext = "This is a sample short help text showed up in the right slider.";
-$helptext = $helptext . "<br><br>HTML markup is <b>supported</b>.";
-$helptext = $helptext . "<br><br>Maybe better to load this from a template file...";
+$helptext = "Keine zusätzliche Hilfe verfügbar.";
 
 print "Content-Type: text/html\n\n";
 
@@ -51,7 +51,8 @@ print "<div class=\"ui-body ui-body-a ui-corner-all loxberry-logo\">\n";
 print "<div style=\"margin: 5%;\">\n";
 
 print "<center>";
-print "<br><br>Dieses Plugin hat keine Einstellungen.<br><br><br>";
+print "<br><br>Dieses Plugin hat keine Einstellungen.<br>";
+print "Hier findest du die <a target=\"_blank\" href=\"/plugins/web2com//web2com.php\">Schnellhilfe</a><br><br><br>";
 print "</center>";
 
 print "</div>\n";

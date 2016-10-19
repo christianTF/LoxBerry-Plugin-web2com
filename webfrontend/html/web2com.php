@@ -157,6 +157,8 @@ function get_string_between($mystring, $start, $end)
 function help() 
 {
 	global $errors;
+	$actual_link = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+	
 ?>
 	<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html lang="de">
@@ -183,6 +185,7 @@ font-size: 10pt;
  alink="#000099" link="#000099" vlink="#990099">
 <h1>Ochsner web2com vom Loxone Miniserver auslesen und schreiben</h1>
 <?php 
+	// echo "<br>" . $actual_link . "<br>";
 	if ($errors !== "") 
 		echo "<h2>Fehler:</h2>" .
 			 "$errors;<br>";
@@ -200,8 +203,7 @@ Eine detaillierte Anleitung dazu findest du <a
 <p><span style="text-decoration: underline;">Aufruf</span>
 im <span style="font-weight: bold;">Virtuellen HTTP
 Eingang</span> von Loxone:</p>
-<p style="font-family: Courier New,Courier,monospace;">http://<span
- style="color: rgb(204, 0, 0);">&lt;deinserver&gt;</span>/web2com.php?host=<span
+<p style="font-family: Courier New,Courier,monospace;"><?=$actual_link?>?host=<span
  style="color: rgb(204, 0, 0);">&lt;WEB2COM-IP&gt;</span>&amp;user=<span
  style="color: rgb(204, 0, 0);">&lt;USER&gt;</span>&amp;pass=<span
  style="color: rgb(204, 0, 0);">&lt;PASSWORD&gt;</span>&amp;getoid=<span
@@ -227,8 +229,7 @@ werden:<br>
 <h2>Schreiben von Werten (setoid)</h2>
 Aufruf in einem <span style="font-weight: bold;">Virtuellen
 Ausgang</span> von Loxone:<br>
-<p style="font-family: Courier New,Courier,monospace;">http://<span
- style="color: rgb(204, 0, 0);">&lt;deinserver&gt;</span>/web2com.php?host=<span
+<p style="font-family: Courier New,Courier,monospace;"><?=$actual_link?>?host=<span
  style="color: rgb(204, 0, 0);">&lt;WEB2COM-IP&gt;</span>&amp;user=<span
  style="color: rgb(204, 0, 0);">&lt;USER&gt;</span>&amp;pass=<span
  style="color: rgb(204, 0, 0);">&lt;PASSWORD&gt;</span>&amp;setoid=<span
@@ -248,8 +249,8 @@ ist der Wert, der gesetzt werden soll.<br>
 Es wird die Antwort der Anfrage an die web2com&nbsp;direkt
 angezeigt.
 <h2>Hinweise</h2>
-Christian Fenzl, christiantf (at) gmx.at 2015. Keine Garantie oder Gewährleistung auf korrekte Funktion.<br>
-Der Author steht weder mit Loxone noch mit Ochsner Wärmepumpen in Beziehung.
+Christian Fenzl, christiantf (at) gmx.at 2016. Keine Garantie oder Gew&auml;hrleistung auf korrekte Funktion.<br>
+Der Author steht weder mit Loxone noch mit Ochsner W&auml;rmepumpen in Beziehung.
 </body>
 </html>
 
