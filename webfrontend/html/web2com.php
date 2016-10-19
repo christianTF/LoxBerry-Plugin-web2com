@@ -247,7 +247,23 @@ ist der Wert, der gesetzt werden soll.<br>
 <br>
 <span style="text-decoration: underline;">Ausgabe</span><br>
 Es wird die Antwort der Anfrage an die web2com&nbsp;direkt
-angezeigt.
+angezeigt.<br>
+<br>
+<h2>F&uuml;r die Community, von der Community</h2>
+F&uuml;r die Entwicklung und zum Testen neuer Funktionen mit Loxone kaufe ich des &Ouml;fteren Hardware, die ich selbst
+gar nicht ben&ouml;tige. Daraus entstehen Wiki-Artikel und Tipps im Loxforum, sowie Plugins f&uuml;r LoxBerry. <br>
+Diese Ochsner Web2Com Schnittstelle ist f&uuml;r Loxone-Benutzer mit dieser W&auml;rmepumpe entstanden, obwohl ich diese selbst nicht besitze.<br>
+<br>
+Wenn du mit diesem Plugin etwas anfangen kannst, freue ich mich &uuml;ber eine kleine Motivation. Verwendest du das Plugin f&uuml;r einen Kunden von dir,
+darf diese Motivation nat&uuml;rlich auch gr&uuml;sser ausfallen. :-)<br>
+Christian Fenzl<br><br>
+<form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+<input type="hidden" name="cmd" value="_s-xclick">
+<input type="hidden" name="hosted_button_id" value="L8XHCPSHC64RL">
+<input type="image" src="https://www.paypalobjects.com/de_DE/AT/i/btn/btn_donate_LG.gif" border="0" name="submit" alt="Jetzt einfach, schnell und sicher online bezahlen – mit PayPal.">
+<img alt="" border="0" src="https://www.paypalobjects.com/de_DE/i/scr/pixel.gif" width="1" height="1">
+</form>
+
 <h2>Hinweise</h2>
 Christian Fenzl, christiantf (at) gmx.at 2016. Keine Garantie oder Gew&auml;hrleistung auf korrekte Funktion.<br>
 Der Author steht weder mit Loxone noch mit Ochsner W&auml;rmepumpen in Beziehung.
