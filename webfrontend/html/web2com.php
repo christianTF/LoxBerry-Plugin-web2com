@@ -13,12 +13,12 @@
 //    error_reporting(-1);
 //    ini_set('display_errors', 'On');
 
-    $getoid = ($_GET["getoid"]);
-    $setoid = ($_GET["setoid"]);
-	$setvalue = ($_GET["value"]);
-    $host = ($_GET["host"]);
-    $user = ($_GET["user"]);
-    $pass = ($_GET["pass"]);
+    $getoid = htmlspecialchars(($_GET["getoid"]));
+    $setoid = htmlspecialchars(($_GET["setoid"]));
+	$setvalue = htmlspecialchars(($_GET["value"]));
+    $host = htmlspecialchars(($_GET["host"]));
+    $user = htmlspecialchars(($_GET["user"]));
+    $pass = htmlspecialchars(($_GET["pass"]));
 
 	$errors = "";
 	if (empty($_GET)) 
