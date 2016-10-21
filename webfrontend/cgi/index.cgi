@@ -51,6 +51,7 @@ print "<div class=\"ui-body ui-body-a ui-corner-all loxberry-logo\">\n";
 print "<div style=\"margin: 5%;\">\n";
 
 print "<center>";
+print "<img src=\"/plugins/web2com/images/ochsner_web2com.png\" alt=\"Ochnser Web2Com Interface\" />";
 print "<br><br>Dieses Plugin hat keine Einstellungen.<br>";
 print "Hier findest du die <a target=\"_blank\" href=\"/plugins/web2com/web2com.php\">Schnellhilfe</a><br><br><br>";
 print "</center>";
