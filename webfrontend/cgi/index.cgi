@@ -52,7 +52,7 @@ print "<div style=\"margin: 5%;\">\n";
 
 print "<center>";
 print "<br><br>Dieses Plugin hat keine Einstellungen.<br>";
-print "Hier findest du die <a target=\"_blank\" href=\"/plugins/web2com//web2com.php\">Schnellhilfe</a><br><br><br>";
+print "Hier findest du die <a target=\"_blank\" href=\"/plugins/web2com/web2com.php\">Schnellhilfe</a><br><br><br>";
 print "</center>";
 
 print "</div>\n";

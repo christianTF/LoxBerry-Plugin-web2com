@@ -10,8 +10,6 @@
 // require '/var/www/kint/Kint.class.php';
 
 // Error-Handling
-//    error_reporting(-1);
-//    ini_set('display_errors', 'On');
 
     $getoid = htmlspecialchars(($_GET["getoid"]));
     $setoid = htmlspecialchars(($_GET["setoid"]));
@@ -98,6 +96,8 @@ function set_oidvalue($host, $user, $pass, $setoid, $value)
     $value = str_replace(",", ".", $value);
 	
 	$url = "http://$host/ws";
+	$index = substr($setoid, -1, strrpos($setoid, '/')-1);
+ 
 	
 	$ch = curl_init();
     $curlverbose = fopen('php://temp', 'w+');
@@ -105,7 +105,7 @@ function set_oidvalue($host, $user, $pass, $setoid, $value)
 	$xml_post_string = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" .
 					"<SOAP-ENV:Envelope xmlns:SOAP-ENV=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:SOAP-ENC=\"http://schemas.xmlsoap.org/soap/encoding/\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:ns=\"http://ws01.lom.ch/soap/\">" .
 					"<SOAP-ENV:Body><ns:writeDpRequest><ref><oid>$setoid</oid><prop/></ref>" .
-					"<dp><index>1</index><name/><prop/><desc/><value>$value</value><unit/><timestamp>0</timestamp></dp>" .
+					"<dp><index>$index</index><name/><prop/><desc/><value>$value</value><unit/><timestamp>0</timestamp></dp>" .
 					"</ns:writeDpRequest></SOAP-ENV:Body></SOAP-ENV:Envelope>";
 	
 	$headers = array(
@@ -133,6 +133,7 @@ function set_oidvalue($host, $user, $pass, $setoid, $value)
 	$response = curl_exec($ch);
 	
 	//if ($response === FALSE) {
+		printf("Response: %s<br>\n", $response);
 		printf("cUrl error (#%d): %s<br>\n", curl_errno($ch),
 		htmlspecialchars(curl_error($ch)));
 		rewind($verbose);
