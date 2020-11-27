@@ -1,10 +1,7 @@
 <?php
 //###################################### Ochsner web2com auslesen ######################################
-//##                                       Christian Fenzl 2015                                       ##
+//##                                       Christian Fenzl 2015-2020                                  ##
 //######################################################################################################
-
-// Für die Verwendung von cURL muss unter Linux installiert werden:
-// sudo apt-get install php5-curl
 
 
 // require '/var/www/kint/Kint.class.php';
@@ -20,15 +17,50 @@
     $user = htmlspecialchars(($_GET["user"]));
     $pass = htmlspecialchars(($_GET["pass"]));
 
+	$curl_timeout = 60;
+
+	// MQTT initialisation
+	
+	$mqtt_basetopic = "web2com"; // No trailing slash
+	
+
+	$mqtt_connected = false;
+	try { 
+		require_once "loxberry_io.php";
+		require_once "phpMQTT/phpMQTT.php";
+	} catch (Exception $e) {
+		error_log( "Could not load LoxBerry IO for MQTT features - possibly too old LoxBerry version" );
+	}
+	
+	if ( !function_exists('mqtt_connectiondetails') ) {
+		error_log( "MQTT features not available with this LoxBerry version." );
+	} else {
+		$mqtt_creds = mqtt_connectiondetails();
+	}
+
+	if( !is_array($mqtt_creds) ) 
+	{
+		error_log("MQTT Gateway is not installed, MQTT features not available.");
+	} else {
+		// Connect to MQTT broker
+		$mqtt_clientid = uniqid(gethostname()."_web2com");
+		$mqtt_conn = new Bluerhinos\phpMQTT($mqtt_creds['brokerhost'],  $mqtt_creds['brokerport'], $mqtt_clientid);
+		if( $mqtt_conn->connect(true, NULL, $mqtt_creds['brokeruser'], $mqtt_creds['brokerpass'] ) ) {
+			$mqtt_connected = true;
+		}
+	}
+
+	// MQTT initialisation End
+
 	$errors = "";
 	if (empty($_GET)) 
 		help();
 	if (empty($host)) 
 		$errors .= "Der Parameter HOST muss angegeben werden.<br>";
 	if (empty($getoid) AND empty($setoid))
-		$errors .= "Es muss eine der Funktionen GETOID oder SETOID als Parameter übergeben werden.<br>";
+		$errors .= "Es muss eine der Funktionen GETOID oder SETOID als Parameter Ã¼bergeben werden.<br>";
 	if (!empty($setoid) AND empty($setvalue))
-		$errors .= "Bei der Funktion SETOID muss ein Wert als VALUE-Parameter übergeben werden.<br>";
+		$errors .= "Bei der Funktion SETOID muss ein Wert als VALUE-Parameter Ã¼bergeben werden.<br>";
 	if (!empty($errors))
 			help();
     if (!empty($getoid)) 
@@ -39,7 +71,9 @@
 		
 function get_oidvalues($host, $user, $pass, $getoid)
 {
-    $oids = explode(";", str_replace(",", ";", $getoid ));
+	global $curl_timeout;
+	
+	$oids = explode(";", str_replace(",", ";", $getoid ));
 	
     $url = "http://$host/ws";
 	
@@ -72,7 +106,7 @@ function get_oidvalues($host, $user, $pass, $getoid)
             curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_ANY);
             curl_setopt($ch, CURLOPT_POST, true);
             curl_setopt($ch, CURLOPT_POSTFIELDS, $xml_post_string);
-            curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+            curl_setopt($ch, CURLOPT_TIMEOUT, $curl_timeout);
             curl_setopt($ch, CURLOPT_VERBOSE, true);
             curl_setopt($ch, CURLOPT_STDERR, $curlverbose);
             $response = curl_exec($ch);
@@ -87,6 +121,7 @@ function get_oidvalues($host, $user, $pass, $getoid)
 			
 		$value = get_string_between($response, "<value>", "</value>"); 
         $jsonresponse .= "\n \"$oid\": $value,";
+		mqtt_send( $oid, $value );
     }
 
     curl_close($ch);
@@ -95,7 +130,9 @@ function get_oidvalues($host, $user, $pass, $getoid)
 
 function set_oidvalue($host, $user, $pass, $setoid, $value)
 {
-    $value = str_replace(",", ".", $value);
+    global $curl_timeout;
+	
+	$value = str_replace(",", ".", $value);
 	
 	$url = "http://$host/ws";
 	$index = substr($setoid, -1, strrpos($setoid, '/')-1);
@@ -129,7 +166,7 @@ function set_oidvalue($host, $user, $pass, $setoid, $value)
 	curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_ANY);
 	curl_setopt($ch, CURLOPT_POST, true);
 	curl_setopt($ch, CURLOPT_POSTFIELDS, $xml_post_string);
-	curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+	curl_setopt($ch, CURLOPT_TIMEOUT, $curl_timeout);
 	curl_setopt($ch, CURLOPT_VERBOSE, true);
 	curl_setopt($ch, CURLOPT_STDERR, $curlverbose);
 	$response = curl_exec($ch);
@@ -156,6 +193,27 @@ function get_string_between($mystring, $start, $end)
     $len = strpos($mystring,$end,$ini) - $ini;
     return substr($mystring,$ini,$len);
 }
+
+/*
+	To keep the plugin compatible to lower LoxBerry versions, all
+	the MQTT stuff is try/catched
+*/
+function mqtt_send( $subject, $value ) 
+{
+	global $mqtt_basetopic;
+	global $mqtt_connected;
+	global $mqtt_conn;
+	
+	if( $mqtt_connected != true ) 
+	{
+		return;
+	}
+
+	$valuetopic = $mqtt_basetopic."/".$subject;
+	$mqtt_conn->publish( $valuetopic, $value, 0, true);
+
+}
+
 
 function help() 
 {
@@ -263,7 +321,7 @@ Christian Fenzl<br><br>
 <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
 <input type="hidden" name="cmd" value="_s-xclick">
 <input type="hidden" name="hosted_button_id" value="L8XHCPSHC64RL">
-<input type="image" src="https://www.paypalobjects.com/de_DE/AT/i/btn/btn_donate_LG.gif" border="0" name="submit" alt="Jetzt einfach, schnell und sicher online bezahlen – mit PayPal.">
+<input type="image" src="https://www.paypalobjects.com/de_DE/AT/i/btn/btn_donate_LG.gif" border="0" name="submit" alt="Jetzt einfach, schnell und sicher online bezahlen â€“ mit PayPal.">
 <img alt="" border="0" src="https://www.paypalobjects.com/de_DE/i/scr/pixel.gif" width="1" height="1">
 </form>
 
